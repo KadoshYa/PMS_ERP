@@ -79,50 +79,53 @@ class ProfilesController extends Controller
      */
     public function update(Request $request )
     {
-    $this->validate($request, [
+        $this->validate($request, 
+          [
 
-        'name' => 'required',
-        'email' => 'required|email',
-        'profileimage' =>'image|mimes:png,jpg,jpeg|max:2000'
+            'name' => 'required',
+            'email' => 'required|email',
+            'profileimage' =>'image|mimes:png,jpg,jpeg|max:2000'
 
-    ]);
+          ]);
 
-    $user = Auth::user();
+            $user = Auth::user();
 
-    $user->name =$request->name;
-    $user->email=$request->email;
-    $user->title=$request->title;
-    $user->phone=$request->phone;
-    $user->facebook=$request->facebook;
-    $user->linkedin=$request->linkedin;
-    if($user['profileimage']==''){
-    if($request->file('profileimage')){
-        $image=$request->file('profileimage');
-        if($image->isValid()){
-            $fileName=time().$image->getClientOriginalName();
-            $small_image_path=public_path('PmsErp/userProfile/'.$fileName);
-            //Resize Image
-            Image::make($image)->resize(500,500)->save($small_image_path);
-            $user->profileimage=$fileName;
+            $user->name =$request->name;
+            $user->email=$request->email;
+            $user->title=$request->title;
+            $user->phonenumber=$request->phone;
+            $user->facebook=$request->facebook;
+            $user->linkedin=$request->linkedin;
+            if($user['profileimage']==''){
+            if($request->file('profileimage')){
+            $image=$request->file('profileimage');
+            
+            if($image->isValid()){
+                $fileName=time().$image->getClientOriginalName();
+                $small_image_path=public_path('PmsErp/userProfile/'.$fileName);
+                //Resize Image
+                Image::make($image)->resize(500,500)->save($small_image_path);
+                $user->profileimage=$fileName;
+            }
         }
-    }
 
     }
-    $user->save();
 
-    if(($request->has('password'))&&($request->password != "") )
-    {
-if(($request->password == $request->confirmpassword)){
-    $user->password= bcrypt($request->password);
-    $user->save();
-    Session::flash('success','Account profile updated.');
-}else{
-    Session::flash('error','Password Not Matched.');
-}
-       
-    }
-    else{
-        Session::flash('success','Account profile updated.');
+            if(($request->has('password'))&&($request->password != "") )
+            {
+                if(($request->password == $request->confirmpassword)){
+                    $user->password= bcrypt($request->password);
+                    $user->save();
+                    Session::flash('success','Account profile updated.');
+                }else{
+                    Session::flash('error','Password Not Matched.');
+            }
+            
+            $user->save();
+
+            }
+            else{
+                Session::flash('success','Account profile updated.');
     }
 
 

@@ -31,7 +31,7 @@
             
                     <div class="card-header">
                         <label class="card-title"> Create a new task </label>
-                    </div>
+                    </div> 
 
                     <div class="card-body" >
                         <form action="{{ route('task.store') }}" method="post" enctype="multipart/form-data">
@@ -43,12 +43,23 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="employee_id">Assign to:</label>
+                                    <label for="admin_id">Assign to:</label>
+                                        @if(Auth::user()->admin==2)
+                                            <select name="admin_id" id="admin_id" class="form-control">   
+                                            <option value="" Selected>Department</option>                                            
+                                                @foreach($admins as $admin)
+                                                    <option value="{{$admin->id}}">{{$admin->department}} Department</option>
+                                                @endforeach
+                                            </select>
+                                         </div>
+                                 
+                                        @else
                                         <div class="form-group">
                                             @foreach ($users as $user)
                                                 <input type="checkbox" id="inlineCheckbox1" name="employee_id[]" value="{{$user->id}}"> {{$user->name}} <br>
                                             @endforeach
                                         </div>
+                                        @endif
 
                                     
                                 </div>
@@ -94,8 +105,9 @@
                                     <label for="addToProject">Add To Project (Optional)</label>
 
                                     <select name="addToProject" id="addToProject" class="form-control">
+                                    <option value="" Selected>Choose Project</option>
+
                                             @foreach ($projects as $project)
-                                                <option value="" Selected>Chose Project</option>
                                                 <option value="{{$project->id}}">{{$project->name}}</option>
                                             @endforeach
                                     </select>

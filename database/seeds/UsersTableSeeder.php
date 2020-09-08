@@ -11,7 +11,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $user =  App\User::create([
+        $admin_user =  App\User::create([
 
         'name' => 'Kidus Admin',
         'email' => 'kidus@admin.com',
@@ -19,7 +19,17 @@ class UsersTableSeeder extends Seeder
         'department'=>'IT',
         'admin' => 1 
 
-    ]);
+         ]);
+
+        $super_user =  App\User::create([
+
+            'name' => 'Kidus Super',
+            'email' => 'kidus@super.com',
+            'password'=> bcrypt('password'),
+            'department'=>'',
+            'admin' => 2 
+
+        ]);
 
     }
 }

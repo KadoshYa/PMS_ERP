@@ -18,15 +18,14 @@ class CheckAdmin
     public function handle($request, Closure $next)
     {
 
-        if(!Auth::user()->admin)
+        if(!Auth::user()->admin==1)
         {
-
-       
-            return redirect()->route('admin_home');
+            if ($request->wantsJson())
+            {
+                return response()->json(['Message' , 'You do not have access to this page.'], 403);
+            }
+            abort(403, 'You do not have access to this page');
         }
-        else{
-        }
-
         return $next($request);
     }
 }

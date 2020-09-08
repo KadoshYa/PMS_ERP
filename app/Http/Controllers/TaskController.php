@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Notifications\NewTaskNotification;
+use Spatie\Activitylog\Models\Activity;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Http\Request;
+use Validator;
 use App\Project;
 use App\User;
 use Auth;
@@ -45,9 +50,11 @@ class TaskController extends Controller
         $adminId = Auth::id();
         $user = User::find($adminId); 
         $department=$user->department;
+        $admin_code = 1;
 
         return view('pmsErp.task.create')->with('projects', Project::all())
-                                         ->with('users', User::where('department', $department)->get());
+                                         ->with('users', User::where('department', $department)->get())
+                                         ->with('admins', User::where('admin', $admin_code)->get());
     }
 
     /**
@@ -57,40 +64,76 @@ class TaskController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    { 
 
         $this->validate($request, [
 
             'task_name' => 'required|max:255',
-            'employee_id'=> 'required',
             'task_detail'=> 'required|max:500',
             'priority' => 'required',
             'dueDate' => 'required',
 
         ]);
 
-        $document = $request->attachment;
+        if($request->hasFile('attachment'))
+        {
 
-        $document_new_name = time().$document->getClientOriginalName();
+            $document = $request->attachment;
 
-        $document->move('PmsErp/Uploads/TaskDocuments', $document_new_name);
+            $document_new_name = time().$document->getClientOriginalName();
 
-        $task = Task::create([
+            $allowedFileTypes=config('app.allowedFileTypes');
 
-            'task_name' =>$request->task_name,
-            'project_id' =>$request->addToProject,
-            'task_detail' =>$request->task_detail,
-            'priority' =>$request->priority,
-            'due_date' =>$request->dueDate,
-            'attachment'=>'PmsErp/Uploads/TaskDocuments'.$document_new_name            
+            $document->move('PmsErp/Uploads/TaskDocuments/', $document_new_name);
 
-        ]);
+            $task = Task::create([
+
+                'task_name' =>$request->task_name,
+                'employee_id' =>$request->admin_id,
+                'departmnent_id'=>User::find($request->admin_id)->department,
+                'project_id' =>$request->addToProject,
+                'task_detail' =>$request->task_detail,
+                'priority' =>$request->priority,
+                'due_date' =>$request->dueDate,
+                'attachment'=>'PmsErp/Uploads/TaskDocuments/'.$document_new_name            
+
+            ]);
+
+        }
+
+        else 
+        {
+            $task = Task::create([
+
+                'task_name' =>$request->task_name,
+                'employee_id' =>$request->admin_id,
+                'project_id' =>$request->addToProject,
+                'task_detail' =>$request->task_detail,
+                'priority' =>$request->priority,
+                'due_date' =>$request->dueDate,
+    
+            ]);
+        }
+
 
         $task ->users()->attach($request->employee_id);
+        $task ->users()->attach($request->admin_id);
 
-        $task->save();
+        $task->save(); 
 
         toast('Task Successfully Created!', 'success');
+
+        $task_id = $task->id;
+
+        $users = Task::find($task_id)->users; 
+
+        foreach($users as $user)
+        {
+            $new_id=$user->id;
+            User::find($new_id)->notify((new NewTaskNotification));
+
+        }
+    
  
         return redirect()->route('task.all');
 
@@ -113,6 +156,8 @@ class TaskController extends Controller
                                          ->with('date', $stripDate);
 
     }
+
+    
 
     /**
      * Show the form for editing the specified resource.
@@ -163,12 +208,18 @@ class TaskController extends Controller
 
         if($request->hasFile('attachment'))
         {
-            $document = $request->attachment;
-            $document_new_name = time().$document->getClientOriginalName();
-            $document->move('PmsErp/Uploads/TaskDocuments', $document_new_name);
-            $task->attachment = $document_new_name;
-        }
 
+            $document = $request->attachment;
+
+            $document_new_name = time().$document->getClientOriginalName();
+
+            $document->move('PmsErp/Uploads/TaskDocuments/', $document_new_name);
+
+         
+            Task::find($task->id)->attachment='PmsErp/Uploads/TaskDocuments/'.$document_new_name;            
+
+
+        }
         if($request->hasFile('dueDate'))
         {
             $task->due_date = $request->dueDate;

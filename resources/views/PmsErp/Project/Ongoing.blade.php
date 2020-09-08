@@ -51,7 +51,7 @@
 
                                             <tr> 
                                                 <td>
-                                                <a href="{{ route ('project.tasks', ['id' => $project->id ]) }}"> {{ $project->name }} </a>
+                                                <a href="{{ route ('project.showDetail', ['id' => $project->id ]) }}"> {{ $project->name }} </a>
                                                 </td>
                                                 <td>
                                                 {{ $project->created_at->toFormattedDateString() }}
@@ -90,3 +90,13 @@
 
 @endsection
 
+@section('jsblock')
+
+
+<script>
+  $(function () {
+    $("#example1").DataTable({});
+  });
+</script>    
+
+@endsection

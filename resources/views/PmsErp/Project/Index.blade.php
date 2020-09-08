@@ -1,5 +1,5 @@
 @extends('pmsErp.layouts.PmsErp')
-@section('title','Projects')
+@section('title','All Projects')
 @section('content')
 
     <section class="content">
@@ -41,6 +41,10 @@
                                             Actions
                                         </th>
 
+                                        <th >
+                                            Upload Report
+                                        </th>
+
                                     </thead>
 
                                     <tbody>
@@ -53,6 +57,7 @@
                                                     <td>
                                                     <a href="{{ route ('project.showDetail', ['id' => $project->id ]) }}"> {{ $project->name }} </a>
                                                     </td>
+
                                                     <td>
                                                     {{ $project->created_at->toFormattedDateString() }}
                                                     </td>
@@ -74,9 +79,14 @@
                                                     </td>
 
                                                     <td>
-                                                    <a href="{{ route ('project.edit', ['id' => $project->id ]) }}"><span class="fa fa-edit" title="Edit Project"></a>
-                                                    <a href="{{ route ('project.trash', ['id' => $project->id ]) }}"><span class="fa fa-trash" style="color:red" title="Trash Project"></a>
-                                                    <a href="{{ route ('project.complete', ['id' => $project->id ]) }}"><span class="fa fa-check-circle" style="color:blue" title="Mark As Complete"></a> 
+                                                        <a href="{{ route ('project.edit', ['id' => $project->id ]) }}"><span class="fa fa-edit" title="Edit Project"></a>
+                                                        <a href="{{ route ('project.trash', ['id' => $project->id ]) }}"><span class="fa fa-trash" style="color:red" title="Trash Project"></a>
+                                                        <a href="{{ route ('project.complete', ['id' => $project->id ]) }}"><span class="fa fa-check-circle" style="color:blue" title="Mark As Complete"></a> 
+                                                    </td>
+
+                                                    <td>
+                                                        
+                                                            <a href="{{ route ('report.projectcreate', ['id' => $project->id ]) }}"><div class="btn btn-success"> <i class="fa fa-upload"></i> Upload </div></a>
                                                     </td>
 
                                                 </tr>
@@ -107,5 +117,16 @@
     </section>
 
  
+@endsection
+
+@section('jsblock')
+
+
+<script>
+  $(function () {
+    $("#example1").DataTable({});
+  });
+</script>    
+
 @endsection
 

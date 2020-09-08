@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Project;
+use App\Department;
 use App\Task;
 use App\User;
 use Auth;
@@ -35,13 +36,24 @@ class DashboardController extends Controller
 
     }
 
+    public function superDashboard()
+    { 
+      $ongoing = "ongoing";
+      $complete = "complete";
+      $stuck = "stuck";
+     
+        return view('PmsErp.superDashboard')->with('projects', Project::all())
+                                            ->with('ongoingProjects',Project::where('status', $ongoing)->get()->count())
+                                            ->with('completeProjects',Project::where('status', $complete)->get()->count())
+                                            ->with('stuckProjects',Project::where('status', $stuck)->get()->count())
+                                            ->with('departments',Department::all());
+    }
+
     public function adminDashboard()
     {
       $ongoing = "ongoing";
       $complete = "complete";
       $stuck = "stuck";
-
-
      
         return view('PmsErp.adminDashboard')->with('projects', Project::all())
                                             ->with('ongoingProjects',Project::where('status', $ongoing)->get()->count())

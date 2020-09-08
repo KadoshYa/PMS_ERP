@@ -48,7 +48,7 @@
 
                                             <tr> 
                                                 <td>
-                                                    <a href="{{ route ('task.showDetail', ['id' => $task->id ]) }}"> {{ $task->task_name }} </a>
+                                                    {{ $task->task_name }} 
                                                 </td>
                                                 <td>
                                                 {{ $task->deleted_at->toFormattedDateString() }}
@@ -85,3 +85,14 @@
     </section>
 @endsection
 
+
+@section('jsblock')
+
+
+<script>
+  $(function () {
+    $("#example1").DataTable({});
+  });
+</script>    
+
+@endsection

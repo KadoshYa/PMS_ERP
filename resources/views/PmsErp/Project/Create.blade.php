@@ -31,18 +31,33 @@
                 </div>
 
                 <div class="card-body" >
-                    <form action="{{ route('project.store') }} " method="post" enctype="multipart/form-data">
+                        <?php $user_id=Auth::user()->id; ?>
+                    <form action="{{ route('project.store', ['id' => $user_id] ) }} " method="post" enctype="multipart/form-data">
                         {{ csrf_field()}}
 
                             <div class="form-group">
                                 <label for="title">Name of Project</label>
                                 <input type="text" name="project_name" id="form-control" class="form-control" >
                             </div>
+                             @if(Auth::user()->admin==2)
+                                <div class="form-group">
+                                    <label for="admin_id">Assign to:</label>
+                                       
+                                            <select name="admin_id" id="admin_id" class="form-control">   
+                                                @foreach($admins as $admin)
+                                                    <option value="{{$admin->id}}">{{$admin->department}} Department</option>
+                                                @endforeach
+                                            </select>
+
+                                         </div>                                  
+                                </div>
+                              @endif
+
                         
                             <div class="form-group">
                                 <label for="content">Description</label>
                                 <textarea name="description" id="description" cols="5" rows="5" class="form-control"></textarea>                
-                            </div>
+                            </div> 
 
                             <div class="form-group">
                                 <label for="content">Attachment</label>

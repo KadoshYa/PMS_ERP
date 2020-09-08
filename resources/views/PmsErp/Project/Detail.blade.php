@@ -48,10 +48,20 @@
                                     <input type="text" id="disabledTextInput" class="form-control" placeholder="{{$project->status}}">
                                 </div>
 
+                                @if($project->attachment)
+
                                 <div class="form-group">
-                                    <label for="attachment">Attachment</label>
-                                    <a href="{{$project->attachment}}"><div>{{$project->attachment}}</div></a>
+                                    <label for="attachment">Attachment</label><br>
+                                    <a href="{{asset($project->attachment)}}"><div class="btn btn-primary"> <i class="fa fa-file"></i> Downlaod Attachment</div></a>
                                 </div>
+                                @endif
+                                        
+                                    <div class="form-group">
+                                        @foreach($reports as $report)
+                                            <label for="attachment">Reports</label><br>
+                                                <a href="{{asset($report->file)}}"><div class="btn btn-info"> <i class="fa fa-download"></i>Download Report</div></a> Name: {{$report->report}}<br><br>
+                                        @endforeach
+                                    </div>
 
                                 <div class="form-group">
                                     <label for="content">Due Date</label>
@@ -178,7 +188,7 @@
                                     @else 
                                           
                                     <tr>
-                                          <th colspan="5" class="text-center">No Tasks Yet</th>
+                                          <th colspan="5" class="text-center">No Projects Yet</th>
                                     </tr>
                                               
                               @endif

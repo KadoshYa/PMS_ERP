@@ -11,16 +11,19 @@ class CreateReportsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up() 
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('employee_id');  //employee of the person recieving the report
-            $table->string('string_name');   //name of report
+            $table->integer('employee_id')->nullable();  //employee of the person recieving the report
+            $table->integer('project_id')->nullable();
+            $table->string('report');   //name of report
             $table->string('file');          //a report in the form of a document
-            $table->datetime('report_date'); //
-            $table->boolean('recieved');    //is the task recieved by the one doing
-            $table->integer('created_by'); //id of the person who created the report           
+            $table->datetime('report_date')->nullable(); //
+            $table->boolean('recieved')->default(0);      //is the task recieved by the one doing
+            $table->integer('created_by'); //id of the person who created the report   
+            
+            $table->softDeletes()->nullable();
             $table->timestamps();
         });
     }

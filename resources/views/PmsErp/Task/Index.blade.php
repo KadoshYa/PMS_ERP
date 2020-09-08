@@ -131,3 +131,14 @@
 
 @endsection
 
+@section('jsblock')
+
+
+<script>
+  $(function () {
+    $("#example1").DataTable({});
+  });
+</script>    
+
+@endsection
+

@@ -25,7 +25,24 @@ class VerificationController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected function redirectTo()
+            {
+                if(Auth::user()->admin==0)
+                {
+                    return '/User_Dashboard';
+                }
+        
+                if(Auth::user()->admin==1 )
+                {
+                    return '/Admin_Dashboard';
+                }
+        
+                if(Auth::user()->admin==2)
+                {
+                    return '/Super_Dashboard';
+                }
+                
+            }
 
     /**
      * Create a new controller instance.

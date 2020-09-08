@@ -4,7 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+
+use App\Notifications\NewProjectNotification;
+use Spatie\Activitylog\Models\Activity;
+use Illuminate\Notifications\Notifiable;
 use App\Project;
+use App\Report;
+use App\User;
+use Auth;
 use App\Task;
 use DateTime;
 use Alert;
@@ -53,7 +60,9 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('pmsErp.project.create');
+        $admin_code = 1;
+
+        return view('pmsErp.project.create')->with('admins', User::where('admin', $admin_code)->get());;
     }
 
     /**
@@ -62,35 +71,62 @@ class ProjectController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
 
         $this->validate($request, [
 
             'project_name' => 'required|max:255',
-            'owner_id'=> 'required',
             'description'=> 'required|max:500',
             'dueDate' => 'required'
 
         ]);
+       
 
+        if($request->hasFile('attachment'))
+        {
+            $document = $request->attachment;
 
-        $document = $request->attachment;
+            $document_new_name = time().$document->getClientOriginalName();
 
-        $document_new_name = time().$document->getClientOriginalName();
+            $document->move('PmsErp/Uploads/ProjectDocuments/', $document_new_name);
 
-        $document->move('PmsErp/Uploads/TaskDocuments', $document_new_name);
+            $owner_id=Auth::User()->id;
 
+            $project = Project::create([
 
-        $project = Project::create([
+                'name'=>$request->project_name,
+                'owner_id'=>$owner_id,
+                'employee_id'=>$request->admin_id,
+                'description' =>$request->description,
+                'dueDate' =>$request->dueDate,
+                'attachment'=>'PmsErp/Uploads/ProjectDocuments/'.$document_new_name            
+    
+            ]);
+        }
+        
+        else
+        {
+            $owner_id=Auth::User()->id;
 
-            'name'=>$request->project_name,
-            'owner_id'=>Auth::id(),
-            'description' =>$request->description,
-            'dueDate' =>$request->dueDate,
-            'attachment'=>'PmsErp/Uploads/ProjectDocuments'.$document_new_name            
+            $project = Project::create([
 
-        ]);
+                'name'=>$request->project_name,
+                'owner_id'=>$owner_id,
+                'employee_id'=>$request->admin_id,
+                'description' =>$request->description,
+                'dueDate' =>$request->dueDate,
+    
+            ]);    
+
+        }
+
+        if($request->admin_id)
+        {
+            User::find($request->admin_id)->notify((new NewProjectNotification));            
+        }
+        $project->save();
+
 
         toast('Project Successfully Created!', 'success');
 
@@ -120,7 +156,8 @@ class ProjectController extends Controller
 
         return view('pmsErp.project.detail')->with('project', $project)
                                             ->with('tasks', $tasks)
-                                            ->with('date', $stripDate);
+                                            ->with('date', $stripDate)
+                                            ->with('reports', Report::where('project_id', $id)->get());
 
     }
 
@@ -170,12 +207,19 @@ class ProjectController extends Controller
 
         // Attachment Update
 
+   
         if($request->hasFile('attachment'))
         {
             $document = $request->attachment;
-             $document_new_name = time().$document->getClientOriginalName();
-            $document->move('PmsErp/Uploads/ProjectDocuments', $document_new_name);
-            $project->attachment = $document_new_name;
+
+            $document_new_name = time().$document->getClientOriginalName();
+
+            $document->move('PmsErp/Uploads/ProjectDocuments/', $document_new_name);
+
+            $project->attachment='PmsErp/Uploads/ProjectDocuments/'.$document_new_name;         
+    
+            $project->save();
+    
         }
 
         if($request->hasFile('dueDate'))

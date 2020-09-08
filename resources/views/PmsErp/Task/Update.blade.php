@@ -87,8 +87,8 @@
 
 
                                             <div class="form-group">
-                                                <label for="content">Change Attachment</label>
-                                                <input type="file" name="attachment" id="content" class="form-control"></textarea>                
+                                                <label for="attachment">Change Attachment</label>
+                                                <input type="file" name="attachment" id="content" class="form-control"></input>                
                                             </div>
                             @endif
 

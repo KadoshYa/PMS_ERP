@@ -2,13 +2,15 @@
 
 namespace App;
 
+use App\Notifications;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -16,6 +18,13 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable=['name','email','admin','department','password','title','profileimage', 'phonenumber','facebook','linkedin'];
+
+    protected static $logName= 'User';
+
+    protected static $logAttributes = ['name' , 'email', 'user', 'password', 'title', 'profileimage', 'phonenumber', 'facebook', 'linkedin'];
+
+    protected static $logOnlyDirty = true;
+
 
     /**
      * The attributes that should be hidden for arrays.
@@ -25,6 +34,11 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function getDescriptionForEvent(string $eventName): string
+        {
+            return ("User {$eventName} profile");
+        }
 
    
    
@@ -47,9 +61,14 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Task');
     }
 
-    public function departmnet()
+    public function departments()
     {
-        return $this->belongsTo('App\Departmnet');
+        return $this->belongsTo('App\Department');
+    }
+
+    public function report()
+    {
+        return $this->hasMany('App\Report');
     }
     
 }

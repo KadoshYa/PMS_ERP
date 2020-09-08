@@ -16,19 +16,14 @@ class CheckUser
      */
     public function handle($request, Closure $next)
     {
-              
 
-if(Auth::user()->admin )
-{
+         if(!Auth::user())
+        {
+             return redirect()->route('login');
+        }  
 
-
-    return redirect()->route('admin_home');
-
-}
-else{
-    
-}
-
-        return $next($request);
+       return $next($request);
+            
     }
+
 }

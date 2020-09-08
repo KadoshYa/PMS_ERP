@@ -73,8 +73,9 @@
                               </div>
 
                                 <div class="form-group">
-                                    <label for="attachment">Attachment</label>
-                                    <a href="{{$task->attachment}}"><div>{{$task->attachment}}</div></a>
+                                    <label for="attachment">Attachment</label> <br>
+                                    
+                                    <a href="{{asset($task->attachment)}}"><div class="btn btn-primary"> <i class="fa fa-file"></i> Downlaod Attachment</div></a>
                                 </div>
 
                                 <div class="form-group">

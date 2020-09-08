@@ -171,5 +171,11 @@
                           });
                   });
       </script>
+
+<script>
+  $(function () {
+    $("#example1").DataTable({});
+  });
+</script>    
   @endsection
 @endsection
