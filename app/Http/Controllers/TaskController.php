@@ -25,7 +25,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return view('pmsErp.task.index')->with('tasks', Task::all());
+        return view('PmsErp.task.index')->with('tasks', Task::all());
 
     }
 
@@ -37,7 +37,7 @@ class TaskController extends Controller
 
         $tasks = User::find($user_id)->tasks;
 
-        return view('pmsErp.task.mytasks')->with('tasks', $tasks);
+        return view('PmsErp.task.mytasks')->with('tasks', $tasks);
     }
 
     /**
@@ -52,7 +52,7 @@ class TaskController extends Controller
         $department=$user->department;
         $admin_code = 1;
 
-        return view('pmsErp.task.create')->with('projects', Project::all())
+        return view('PmsErp.task.create')->with('projects', Project::all())
                                          ->with('users', User::where('department', $department)->get())
                                          ->with('admins', User::where('admin', $admin_code)->get());
     }
@@ -152,7 +152,7 @@ class TaskController extends Controller
         $createDate = new DateTime($date);
         $stripDate = $createDate->format('m-d-Y');
 
-        return view('pmsErp.task.detail')->with('task', $task)
+        return view('PmsErp.task.detail')->with('task', $task)
                                          ->with('date', $stripDate);
 
     }
@@ -176,7 +176,7 @@ class TaskController extends Controller
         $user = User::find($adminId); 
         $department=$user->department;
 
-        return view('pmsErp.task.update')->with('task', $task)
+        return view('PmsErp.task.update')->with('task', $task)
                                          ->with('date', $stripDate)
                                          ->with('users', User::where('department', $department)->get());
     }
@@ -278,7 +278,7 @@ class TaskController extends Controller
     {
         $tasks = Task::onlyTrashed()->get();
 
-        return view('pmsErp.task.trash')->with('tasks', $tasks);
+        return view('PmsErp.task.trash')->with('tasks', $tasks);
 
     }
 

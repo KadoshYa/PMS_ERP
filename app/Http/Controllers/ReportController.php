@@ -34,7 +34,7 @@ class ReportController extends Controller
                 $dep_reports=$report;
             }
         }
-        return view('pmsErp.report.index')->with('reports', Report::all())
+        return view('PmsErp.report.index')->with('reports', Report::all())
                                           ->with('dep_reports', $dep_reports);
     }
 
@@ -52,7 +52,7 @@ class ReportController extends Controller
         $admin_code = 1;
         $super_code = 2;
         
-        return view('pmsErp.report.create')->with('admins', User::where('admin', $admin_code)->get())
+        return view('PmsErp.report.create')->with('admins', User::where('admin', $admin_code)->get())
                                            ->with('supers', User::where('admin', $super_code)->get());
     }
 
@@ -67,7 +67,7 @@ class ReportController extends Controller
         $admin_code = 1;
         $super_code = 2;
         
-        return view('pmsErp.report.projectreport')->with('admins', User::where('admin', $admin_code)->get())
+        return view('PmsErp.report.projectreport')->with('admins', User::where('admin', $admin_code)->get())
                                                   ->with('supers', User::where('admin', $super_code)->get())
                                                   ->with('project', $project);
     }
@@ -210,7 +210,7 @@ class ReportController extends Controller
 
         $my_reports=Report::where('created_by', $current_user)->get();
 
-        return view('pmsErp.report.MyReport')->with('reports', $my_reports);
+        return view('PmsErp.report.MyReport')->with('reports', $my_reports);
     }
 
     /**

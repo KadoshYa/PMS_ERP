@@ -54,7 +54,7 @@ class LogsController extends Controller
         $activity = Activity::find($id);
         $users = User::all();
 
-        return view('pmsErp.actiondetail')->with('activity', $activity)
+        return view('PmsErp.actiondetail')->with('activity', $activity)
                                           ->with('users', $users);                                          ;
     }
 

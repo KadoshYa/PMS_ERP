@@ -26,15 +26,15 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return view('pmsErp.project.index')->with('projects', Project::all());
+        return view('PmsErp.project.index')->with('projects', Project::all());
 
     }
-
+    
     public function showOngoing()
     {
         $ongoing="ongoing";
 
-        return view('pmsErp.project.ongoing')->with('projects', Project::where('status', $ongoing)->get());
+        return view('PmsErp.project.ongoing')->with('projects', Project::where('status', $ongoing)->get());
 
     }
 
@@ -42,14 +42,14 @@ class ProjectController extends Controller
     {
         $complete = "complete";
 
-        return view('pmsErp.project.complete')->with('projects', Project::where('status', $complete)->get());
+        return view('PmsErp.project.complete')->with('projects', Project::where('status', $complete)->get());
 
     }
 
     public function showStuck()
     {
         $stuck="stuck";
-        return view('pmsErp.project.stuck')->with('projects', Project::where('status', $stuck)->get());
+        return view('PmsErp.project.stuck')->with('projects', Project::where('status', $stuck)->get());
 
     }
 
@@ -62,7 +62,7 @@ class ProjectController extends Controller
     {
         $admin_code = 1;
 
-        return view('pmsErp.project.create')->with('admins', User::where('admin', $admin_code)->get());;
+        return view('PmsErp.project.create')->with('admins', User::where('admin', $admin_code)->get());;
     }
 
     /**
@@ -154,7 +154,7 @@ class ProjectController extends Controller
         $stripDate = $createDate->format('m-d-Y');
     
 
-        return view('pmsErp.project.detail')->with('project', $project)
+        return view('PmsErp.project.detail')->with('project', $project)
                                             ->with('tasks', $tasks)
                                             ->with('date', $stripDate)
                                             ->with('reports', Report::where('project_id', $id)->get());
@@ -164,7 +164,7 @@ class ProjectController extends Controller
     public function calenderView()
 
     {
-        return view('pmsErp.project.calenderView');
+        return view('PmsErp.project.calenderView');
     }
 
     /**
@@ -184,7 +184,7 @@ class ProjectController extends Controller
 
         $stripDate = $createDate->format('m-d-Y');
 
-        return view('pmsErp.project.update')->with('project', $project)
+        return view('PmsErp.project.update')->with('project', $project)
                                             ->with('date', $stripDate);
 
     }
@@ -269,8 +269,8 @@ class ProjectController extends Controller
     {
         $projects = Project::onlyTrashed()->get();
 
-        return view('pmsErp.project.trash')->with('projects', $projects);
-
+        return view('PmsErp.project.trash')->with('projects', $projects);
+    
 
     }
 

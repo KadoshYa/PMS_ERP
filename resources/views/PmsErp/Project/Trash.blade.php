@@ -1,4 +1,4 @@
-@extends('pmsErp.layouts.PmsErp')
+@extends('PmsErp.layouts.PmsErp')
 @section('title','Trashed Projects')
 @section('content')
 
